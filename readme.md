@@ -25,21 +25,21 @@ analizador_big_data_aemg/
 ├── README.md
 │
 ├── .streamlit/
-│ └── config.toml
+│   └── config.toml
 │
 ├── assets/
-│ ├── logo.png
-│ └── logo_favicon.png
+│   ├── logo.png
+│   └── logo_favicon.png
 │
 ├── funciones/
-│ ├── init.py
-│ ├── analisis.py
-│ ├── carga.py
-│ ├── exportacion.py
-│ ├── graficos.py
-│ ├── sql.py
-│ └── transformaciones.py
-└──
+│   ├── __init__.py
+│   ├── analisis.py
+│   ├── carga.py
+│   ├── exportacion.py
+│   ├── graficos.py
+│   ├── sql.py
+│   └── transformaciones.py
+
 ---
 
 ## 🧩 Requisitos
