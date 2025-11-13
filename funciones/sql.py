@@ -1,65 +1,50 @@
-# funciones/sql.py
 import streamlit as st
-from pyspark.sql import SparkSession
+import pandas as pd
+from sqlalchemy import create_engine
 
 def cargar_desde_sql():
     """
-    Streamlit interface to load data from a SQL database using Spark.
-    Allows selecting the database type and automatically generates the JDBC URL.
+    Streamlit interface to load data from a SQL database using pandas + SQLAlchemy.
+    Compatible with Streamlit Cloud (no PySpark required).
     """
     st.subheader("⚙️ Conexión a base de datos SQL")
 
-    # ===== Select database engine =====
     tipo_db = st.selectbox(
         "🗄️ Tipo de base de datos",
-        ["MySQL", "PostgreSQL", "SQL Server", "Oracle", "SQLite"],
+        ["SQLite", "MySQL", "PostgreSQL", "SQL Server", "Oracle"],
         index=0
     )
 
-    # Suggested base JDBC URLs
-    jdbc_bases = {
-        "MySQL": "jdbc:mysql://host:3306/nombre_base",
-        "PostgreSQL": "jdbc:postgresql://host:5432/nombre_base",
-        "SQL Server": "jdbc:sqlserver://host:1433;databaseName=nombre_base",
-        "Oracle": "jdbc:oracle:thin:@host:1521:nombre_base",
-        "SQLite": "jdbc:sqlite:/ruta/al/archivo.db"
+    ejemplos_url = {
+        "SQLite": "sqlite:///ruta/al/archivo.db",
+        "MySQL": "mysql+pymysql://usuario:contraseña@host:3306/nombre_base",
+        "PostgreSQL": "postgresql+psycopg2://usuario:contraseña@host:5432/nombre_base",
+        "SQL Server": "mssql+pyodbc://usuario:contraseña@host:1433/nombre_base?driver=ODBC+Driver+17+for+SQL+Server",
+        "Oracle": "oracle+cx_oracle://usuario:contraseña@host:1521/nombre_base"
     }
 
-    # User input for connection parameters
-    url = st.text_input("🔗 URL de conexión JDBC", value=jdbc_bases[tipo_db])
-    tabla = st.text_input(
-        "📋 Nombre de la tabla o consulta SQL (usa paréntesis si es SELECT)",
-        placeholder="mi_tabla o (SELECT * FROM tabla)"
-    )
-    usuario = st.text_input("👤 Usuario", placeholder="usuario", key="sql_user")
-    contrasena = st.text_input("🔒 Contraseña", type="password", key="sql_password")
+    url = st.text_input("🔗 URL de conexión SQLAlchemy", value=ejemplos_url[tipo_db])
+    tabla = st.text_input("📋 Nombre de la tabla o consulta SQL", placeholder="mi_tabla o SELECT * FROM tabla")
 
-    # ===== Button to execute load =====
     if st.button("🚀 Cargar datos desde SQL"):
-        # Validate input fields
-        if tipo_db != "SQLite" and not all([url, tabla, usuario, contrasena]):
-            st.warning("⚠️ Completa todos los campos para conectar.")
-            return None
-        if tipo_db == "SQLite" and not url:
-            st.warning("⚠️ Indica la ruta al archivo .db de SQLite.")
+        if not url or not tabla:
+            st.warning("⚠️ Debes ingresar la URL de conexión y el nombre de la tabla o consulta.")
             return None
 
         try:
-            # Initialize Spark session
-            spark = SparkSession.builder.appName("AnalizadorBigData").getOrCreate()
-            reader = spark.read.format("jdbc").option("url", url).option("dbtable", tabla)
+            engine = create_engine(url)
 
-            if tipo_db != "SQLite":
-                reader = reader.option("user", usuario).option("password", contrasena)
+            if tabla.strip().lower().startswith("select"):
+                df = pd.read_sql_query(tabla, engine)
+            else:
+                df = pd.read_sql_table(tabla, engine)
 
-            # Load data
-            df = reader.load()
-
-            st.success(f"✅ Datos cargados correctamente desde {tipo_db}. Filas: {df.count()} — Columnas: {len(df.columns)}")
+            st.success(f"✅ Datos cargados correctamente. Filas: {len(df)} — Columnas: {len(df.columns)}")
+            st.dataframe(df.head())
             return df
 
         except Exception as e:
-            st.error(f"❌ Error al cargar datos desde {tipo_db}: {e}")
+            st.error(f"❌ Error al cargar datos desde SQL: {e}")
             return None
 
     return None
