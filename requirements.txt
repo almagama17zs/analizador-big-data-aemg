@@ -15,15 +15,10 @@ seaborn>=0.13.0
 # ===== Machine Learning =====
 scikit-learn>=1.2.0
 
-# ===== Database Support =====
+# ===== Database (solo los compatibles) =====
 sqlalchemy>=2.0.0
-pymysql>=1.1.0           # MySQL connector
-psycopg2-binary>=2.9.9    # PostgreSQL connector
-pyodbc>=5.1.0             # SQL Server connector
-sqlite3-binary>=3.45.1    # SQLite (ya viene en Python, pero se fuerza compatibilidad)
+pymysql>=1.1.0          # MySQL
+psycopg2-binary>=2.9.9   # PostgreSQL
 
-# ===== Big Data / Spark =====
-pyspark>=3.5.0
-
-# ===== Utility =====
+# ===== Utilities =====
 requests>=2.32.3
