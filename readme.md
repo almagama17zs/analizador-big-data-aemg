@@ -17,25 +17,26 @@ Permite cargar archivos CSV, Excel o JSON, conectarse a bases de datos SQL y rea
 ---
 
 ## 🗂️ Estructura del proyecto
+```markdown
 analizador_big_data_aemg/
 ├── app.py
 ├── requirements.txt
 ├── .gitignore
 ├── README.md
 ├── .streamlit/
-│   └── config.toml
+│ └── config.toml
 ├── assets/
-│   ├── logo.png
-│   └── logo_favicon.png
+│ ├── logo.png
+│ └── logo_favicon.png
 └── funciones/
-    ├── __init__.py
-    ├── analisis.py
-    ├── carga.py
-    ├── exportacion.py
-    ├── graficos.py
-    ├── sql.py
-    └── transformaciones.py
-
+├── init.py
+├── analisis.py
+├── carga.py
+├── exportacion.py
+├── graficos.py
+├── sql.py
+└── transformaciones.py
+```
 ---
 
 ## 🧩 Requisitos
