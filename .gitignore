@@ -1,0 +1,27 @@
+# Entornos virtuales
+venv/
+venv*/ 
+.env/
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.spec
+
+# Carpetas de build / ejecutables
+build/
+dist/
+*.exe
+
+# Archivos del sistema / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# Archivos de configuración personales
+.env
+*.bak
