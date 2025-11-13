@@ -24,29 +24,6 @@ cd analizador-big-data-aemg
 
 ---
 
-## 🗂️ Estructura del proyecto
-```markdown
-analizador_big_data_aemg/
-├── app.py
-├── requirements.txt
-├── .gitignore
-├── README.md
-├── .streamlit/
-│ └── config.toml
-├── assets/
-│ ├── logo.png
-│ └── logo_favicon.png
-└── funciones/
-├── init.py
-├── analisis.py
-├── carga.py
-├── exportacion.py
-├── graficos.py
-├── sql.py
-└── transformaciones.py
-```
----
-
 ## 🧩 Requisitos
 
 - Python 3.8 o superior  
