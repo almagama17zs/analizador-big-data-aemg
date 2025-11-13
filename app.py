@@ -48,20 +48,11 @@ div[data-testid="stSidebarContent"] {padding-top:0 !important; margin-top:-2rem 
 div[data-baseweb="select"] {font-size:16px !important;}
 .blue-header {color:#007ACC !important; font-weight:bold !important;}
 h2,h3,h4 {color:#007ACC !important; font-weight:700 !important; margin-top:0.2rem !important; margin-bottom:0.2rem !important;}
-
-/* ===== 🔧 WIDEN SIDEBAR ===== */
-[data-testid="stSidebar"] {
-    width: 340px !important;      /* desired width */
-    min-width: 340px !important;
-}
+[data-testid="stSidebar"] {width: 340px !important; min-width: 340px !important;}
 [data-testid="stSidebar"] .stSelectbox,
 [data-testid="stSidebar"] .stExpander,
-[data-testid="stSidebar"] .stButton {
-    width: 100% !important;
-}
-[data-testid="stSidebarContent"] {
-    padding-right: 10px !important;
-}
+[data-testid="stSidebar"] .stButton {width: 100% !important;}
+[data-testid="stSidebarContent"] {padding-right: 10px !important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -71,7 +62,6 @@ st.markdown("---")
 
 # ===== 🖼️ LOGO =====
 logo_path = Path("assets/logo.png")
-# Display logo if it exists, otherwise show a warning
 if logo_path.exists():
     st.sidebar.image(str(logo_path), width=150)
 else:
@@ -105,13 +95,11 @@ from funciones.graficos import graficar_histograma, graficar_barras
 from funciones.sql import cargar_desde_sql
 
 # ===== 🧠 GLOBAL VARIABLE =====
-# Initialize dataframe in session state if not already set
 if "df" not in st.session_state:
     st.session_state.df = None
 
-# ===== ✅ AUXILIARY FUNCTIONS =====
+# ===== ✅ AUXILIARY FUNCTION =====
 def necesita_df():
-    # Check if a dataframe is loaded
     if st.session_state.df is None:
         st.warning("⚠️ Carga un archivo primero.")
         return False
@@ -124,7 +112,6 @@ if menu == "Inicio":
 elif menu == "Cargar archivo":
     archivo = st.file_uploader("📂 Sube aquí tu base de datos (.csv, .json, .xlsx)", type=["csv","json","xlsx"])
     if archivo:
-        # Load file into dataframe
         df = cargar_archivo(archivo)
         if df is not None:
             st.session_state.df = df
@@ -133,7 +120,6 @@ elif menu == "Cargar archivo":
             st.error("❌ Error al cargar archivo.")
 
 elif menu == "Cargar desde SQL":
-    # Load dataframe from SQL database
     df = cargar_desde_sql()
     if df is not None:
         st.session_state.df = df

@@ -32,7 +32,7 @@ def eliminar_columna(df: pd.DataFrame) -> pd.DataFrame:
             df = st.session_state.df_backup.copy()
             st.success("↩️ Se ha restaurado la columna eliminada.")
 
-    mostrar_df_actualizado(df)
+    mostrar_df_actualizado(df, key_prefix="eliminar_columna")
     return df
 
 # =======================
@@ -66,7 +66,7 @@ def reemplazar_valor(df: pd.DataFrame) -> pd.DataFrame:
             df = st.session_state.df_backup.copy()
             st.success("↩️ Cambios deshechos.")
 
-    mostrar_df_actualizado(df)
+    mostrar_df_actualizado(df, key_prefix="reemplazar_valor")
     return df
 
 # =======================
@@ -97,8 +97,7 @@ def eliminar_duplicados(df: pd.DataFrame) -> pd.DataFrame:
             df = st.session_state.df_backup.copy()
             st.success("↩️ Cambios deshechos.")
 
-    from funciones.transformaciones import mostrar_df_actualizado
-    mostrar_df_actualizado(df)
+    mostrar_df_actualizado(df, key_prefix="eliminar_duplicados")
     return df
 
 # =======================
@@ -120,10 +119,10 @@ def buscar_texto(df: pd.DataFrame) -> pd.DataFrame:
         if st.button("Buscar", key="btn_search_text"):
             df_filtrado = df[df[col_name].astype(str).str.contains(texto, na=False)]
             st.success(f"✅ Resultados filtrados por '{texto}' en columna '{col_name}'")
-            mostrar_df_actualizado(df_filtrado)
+            mostrar_df_actualizado(df_filtrado, key_prefix="buscar_texto")
             return df_filtrado
 
-    mostrar_df_actualizado(df)
+    mostrar_df_actualizado(df, key_prefix="buscar_texto")
     return df
 
 # =======================
@@ -157,7 +156,7 @@ def crear_columna_combinada(df: pd.DataFrame) -> pd.DataFrame:
             df = st.session_state.df_backup.copy()
             st.success("↩️ Se ha deshecho la creación de la columna combinada.")
 
-    mostrar_df_actualizado(df)
+    mostrar_df_actualizado(df, key_prefix="crear_columna")
     return df
 
 # =======================
@@ -179,22 +178,31 @@ def eliminar_nulos(df: pd.DataFrame) -> pd.DataFrame:
         count_despues = df.shape[0]
         st.success(f"✅ Filas eliminadas: {count_antes - count_despues} | Filas restantes: {count_despues}")
 
-    mostrar_df_actualizado(df)
+    mostrar_df_actualizado(df, key_prefix="eliminar_nulos")
     return df
 
 # =======================
-# 🌟 AUXILIARY FUNCTION TO SHOW UPDATED DF
+# 🌟 AUXILIARY FUNCTION TO SHOW UPDATED DF (STREAMLIT CLOUD SAFE)
 # =======================
-def mostrar_df_actualizado(df: pd.DataFrame):
+def mostrar_df_actualizado(df: pd.DataFrame, key_prefix="df_display"):
     """
-    Display DataFrame with AgGrid, blue headers, truncated text, and CSV export.
+    Display DataFrame with AgGrid safely:
+    - Uses session_state to avoid re-render issues.
+    - Blue headers, truncated text, CSV export.
     """
-    df_disp = prepare_display_df(df, max_len=200)
+    if "df_to_show" not in st.session_state:
+        st.session_state.df_to_show = df.copy()
+
+    st.session_state.df_to_show = df.copy()  # update DataFrame in session_state
+
+    df_disp = prepare_display_df(st.session_state.df_to_show, max_len=200)
     gb = base_grid_from_df(df_disp)
     for c in df_disp.columns:
         gb.configure_column(c, headerTooltip=f"Columna: {c}")
 
     height_grid = calc_height_for_rows(len(df_disp), row_height=34, header_extra=80, max_height=600)
+    
+    # Render AgGrid outside of buttons
     AgGrid(
         df_disp,
         gridOptions=gb.build(),
@@ -203,13 +211,15 @@ def mostrar_df_actualizado(df: pd.DataFrame):
         allow_unsafe_jscode=False,
         custom_css=CUSTOM_CSS_COMMON,
         height=height_grid,
+        key=f"{key_prefix}_aggrid",
     )
 
-    # Export CSV button
-    csv = df.to_csv(index=False).encode("utf-8")
+    # CSV export button
+    csv = st.session_state.df_to_show.to_csv(index=False).encode("utf-8")
     st.download_button(
         label="💾 Exportar CSV actualizado",
         data=csv,
         file_name="datos_actualizados.csv",
         mime="text/csv",
+        key=f"{key_prefix}_download",
     )
