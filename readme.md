@@ -6,13 +6,21 @@ Permite cargar archivos CSV, Excel o JSON, conectarse a bases de datos SQL y rea
 ---
 
 ## 🚀 Características principales
-
 - Carga de datos desde archivos locales o bases SQL.
 - Exploración y limpieza de datos (eliminar nulos, duplicados, columnas, etc.).
 - Transformaciones y combinaciones de columnas.
-- Visualizaciones con **Plotly**, **Matplotlib** y **Seaborn**.
+- Visualizaciones con Plotly, Matplotlib y Seaborn.
 - Estadísticas agrupadas.
 - Exportación de resultados.
+
+---
+
+## 🌐 Acceso a la aplicación
+- [Ver aplicación en Streamlit Cloud](https://bigdataaemg.streamlit.app/)
+- Clonar repositorio:
+```bash
+git clone https://github.com/almagama17zs/analizador-big-data-aemg.git
+cd analizador-big-data-aemg
 
 ---
 
@@ -48,10 +56,3 @@ analizador_big_data_aemg/
 Todas las dependencias se instalan automáticamente desde el archivo `requirements.txt`.
 
 --- 
-
-## ⚙️ Instalación local
-
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/TU_USUARIO/analizador_big_data_aemg.git
-   cd analizador_big_data_aemg
